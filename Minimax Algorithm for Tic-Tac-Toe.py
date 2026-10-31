@@ -1,8 +1,22 @@
+def check_winner(board, player):
+    wins = [
+        (0, 1, 2), (3, 4, 5), (6, 7, 8),
+        (0, 3, 6), (1, 4, 7), (2, 5, 8),
+        (0, 4, 8), (2, 4, 6)
+    ]
+
+    for a, b, c in wins:
+        if board[a] == board[b] == board[c] == player:
+            return True
+
+    return False
+
+
 def minimax(board, is_max):
-    if "X" in board and board.count("X") == 3:
+    if check_winner(board, "X"):
         return 1
 
-    if "O" in board and board.count("O") == 3:
+    if check_winner(board, "O"):
         return -1
 
     if " " not in board:
@@ -14,9 +28,8 @@ def minimax(board, is_max):
         for i in range(9):
             if board[i] == " ":
                 board[i] = "X"
-                score = minimax(board, False)
+                best = max(best, minimax(board, False))
                 board[i] = " "
-                best = max(best, score)
 
         return best
 
@@ -26,15 +39,17 @@ def minimax(board, is_max):
         for i in range(9):
             if board[i] == " ":
                 board[i] = "O"
-                score = minimax(board, True)
+                best = min(best, minimax(board, True))
                 board[i] = " "
-                best = min(best, score)
 
         return best
 
-board = ["X", "O", "X",
-         "O", "X", " ",
-         " ", " ", "O"]
+
+board = [
+    "X", "O", "X",
+    "O", "X", " ",
+    " ", " ", "O"
+]
 
 best_score = -100
 best_move = -1
